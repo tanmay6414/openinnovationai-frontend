@@ -154,9 +154,9 @@ pipeline {
   stages {
      stage('Update Manifest') {
       steps {
-        container('helm') {
+        container('updateenv') {
           withCredentials([string(credentialsId: 'GTOKEN', variable: 'token')]) {
-            sh 'export GITHUB_TOKEN=$token updateappmanifest --cluster CD --env env1 --folder argo --app frontend --manifest front-end.yaml  --version 1.2.4 --label test'
+            sh 'export GITHUB_TOKEN=$token updateappmanifest --cluster CD --env env1 --folder argo --app frontend --manifest front-end.yaml  --version 1.2.4 --label test --repo_name tanmay6414/openinnovationai-frontend'
           }
 
         }
