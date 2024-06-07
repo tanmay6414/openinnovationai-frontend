@@ -20,17 +20,17 @@ pipeline {
             image: docker:20-dind
             command:
             - cat
+            args:
+            - /usr/local/bin/dockerd-entrypoint.sh
             tty: true
             securityContext:
               privileged: true
+              runAsUser: 0
             env:
             - name: DOCKER_TLS_CERTDIR
               value: ''
             - name: DOCKER_HOST
-              value: tcp://localhost:2375
-          volumes:
-          - name: docker-graph-storage
-            emptyDir: {}
+              value: 'tcp://localhost:2375'
        
         '''
       
