@@ -114,7 +114,7 @@ pipeline {
     }
     stage('Cleanup') {
       steps {
-        sh '"Cleanup all the resources"'
+        sh 'echo "Cleanup all the resources"'
       }
     }
     
