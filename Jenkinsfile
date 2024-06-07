@@ -24,21 +24,13 @@ pipeline {
       steps {
         container('maven') {
           sh 'mvn -version'
-            checkout([
-                $class                           : 'GitSCM',
-                branches                         : [[name: "*/master"]],
-                extensions                       : [],
-                userRemoteConfigs                : [
-                    [url: 'git@github.com:tanmay6414/openinnovationai-frontend.git']
-                ]
-            ])
                 
         }
       }
     }
      stage('Run helm') {
       steps {
-        container('maven') {
+        container('helm') {
           sh 'helm version'
         }
       }
