@@ -83,7 +83,10 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: tanmay6414/openinnovationai
-
+      - name: manifest file
+        run: |
+          ls
+          ls ../
       - name: manifest file
         run: |
           cd openinnovationai/argo/CD
