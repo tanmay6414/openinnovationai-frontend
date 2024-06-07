@@ -125,7 +125,7 @@ pipeline {
     stage('Itest') {
       steps {
         container('docker-dind') {
-          sh 'docker build test/test .'
+          sh 'docker build -t test/test .'
         }
       }
     }
