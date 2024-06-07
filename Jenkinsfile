@@ -19,7 +19,7 @@ pipeline {
           - name: docker-dind
             image: docker:20-dind
             command:
-            - cat
+            - sh
             args:
             - /usr/local/bin/dockerd-entrypoint.sh
             tty: true
