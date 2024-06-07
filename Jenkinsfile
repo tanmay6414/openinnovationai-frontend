@@ -67,23 +67,29 @@ pipeline {
         }
       }
     }
-    stage('Docker Build and Docker Push') {
-      steps {
-        container('docker-dind') {
-          // SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
-          sh 'docker build -t demo.goharbor.io/openinnovationai/frontend:ci .'
-          sh 'docker push demo.goharbor.io/openinnovationai/frontend:ci'
-          // script {
-            // if (env.BRANCH_NAME == 'master') {
-                // sh 'docker tag demo.goharbor.io/openinnovationai/frontend:ci demo.goharbor.io/openinnovationai/frontend:master-$SHORT_COMMIT'
-                // sh 'docker push demo.goharbor.io/openinnovationai/frontend:master-$SHORT_COMMIT'
-            // } 
-            // if (env.BRANCH_NAME == 'release') {
-                // sh 'docker tag demo.goharbor.io/openinnovationai/frontend:ci demo.goharbor.io/openinnovationai/frontend:release-$SHORT_COMMIT'
-                // sh 'docker push demo.goharbor.io/openinnovationai/frontend:release-$SHORT_COMMIT'
-            // }
+    stage('Artifact CI') {
+      parallel {
+        stage('Docker tag and push ci artifact') {
+          steps {
+              // SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+              sh 'echo "docker build demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu ."'
+              sh 'echo "docker push demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu"'
+              sh 'echo "In this step we are building and pushing artifact with out ci tag"'
             
-          //} 
+           }
+        }
+        stage('Package and publish helm CI') {
+          steps {
+              sh 'echo "Here we update the helm values file with above updated sha, packege it and publish it to harbor repo"'
+           }
+        }
+      }
+      stages {
+       stage('Deploy sample app to k8s') {
+        steps {
+          container('helm') {
+            sh 'echo "helm upgrade -i oci://demo.goharbor.io/openinnovationai/frontend --version 0.1.0-ci-hfnvjfu"'
+          }
         }
       }
     }
