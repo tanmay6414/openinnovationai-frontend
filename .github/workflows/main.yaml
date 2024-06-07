@@ -42,9 +42,17 @@ jobs:
           echo 'Running unit test'
           echo 'yarn test'
 
+      - name: Create and push Dockerfile
+        run: |
+          docker build -t demo.goharbor.io/openinnovationai/frontend:master 
+          docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
+          docker push demo.goharbor.io/openinnovationai/frontend:master
+          docker push demo.goharbor.io/openinnovationai/frontend:master--$GITHUB_SHA
+
       - name: Deploy the application
         run: |
-          helm upgrade -i frontend charts/frontend --debug
+          'helm upgrade -i frontend charts/frontend --debug'
+          echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
 
       # - name: Run unit tests, Docker build, and compliance check in parallel
       #   run: |
