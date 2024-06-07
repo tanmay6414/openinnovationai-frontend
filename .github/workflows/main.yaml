@@ -42,22 +42,28 @@ jobs:
           echo 'Running unit test'
           echo 'yarn test'
 
-      - name: Create and push Dockerfile
-        run: |
-          ls
-          docker build -t demo.goharbor.io/openinnovationai/frontend:master .
-          echo '\ndocker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
-          docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
-          echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master'
-          docker push demo.goharbor.io/openinnovationai/frontend:master
-          echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
-          docker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
+      # - name: Create and push Dockerfile
+      #   run: |
+      #     ls
+      #     docker build -t demo.goharbor.io/openinnovationai/frontend:master .
+      #     echo '\ndocker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
+      #     docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
+      #     echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master'
+      #     docker push demo.goharbor.io/openinnovationai/frontend:master
+      #     echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
+      #     docker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
 
       - name: Deploy the application
         run: |
-          'helm upgrade -i frontend charts/frontend --debug'
+          echo 'helm upgrade -i frontend charts/frontend --debug'
           echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
 
+      - name: Package the helm chart
+        run: |
+          ls
+          helm dependency build charts/frontend
+          helm package charts/frontend
+          
       # - name: Run unit tests, Docker build, and compliance check in parallel
       #   run: |
       #     # Run unit tests
