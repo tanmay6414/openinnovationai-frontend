@@ -13,35 +13,35 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Initialize Helm chart
+      - name: Add Helm repo
         run: |
           # Initialize Helm chart here
-          helm init
+          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 
-      - name: Run unit tests, Docker build, and compliance check in parallel
-        run: |
-          # Run unit tests
-          echo "Running unit tests..."
+      # - name: Run unit tests, Docker build, and compliance check in parallel
+      #   run: |
+      #     # Run unit tests
+      #     echo "Running unit tests..."
 
-          # Build Docker image
-          echo "Building Docker image..."
-          # docker build -t my-docker-image .
+      #     # Build Docker image
+      #     echo "Building Docker image..."
+      #     # docker build -t my-docker-image .
 
-          # Run compliance check
-          echo "Running compliance check..."
-          # Run compliance check commands here
+      #     # Run compliance check
+      #     echo "Running compliance check..."
+      #     # Run compliance check commands here
 
-      - name: Deploy application
-        run: |
-          # Deploy application using Helm
-          # helm upgrade --install my-app ./helm-chart
+      # - name: Deploy application
+      #   run: |
+      #     # Deploy application using Helm
+      #     # helm upgrade --install my-app ./helm-chart
 
-      - name: Publish results
-        run: |
-          # Publish results
-          # Add commands to publish results here
+      # - name: Publish results
+      #   run: |
+      #     # Publish results
+      #     # Add commands to publish results here
 
-      - name: Clean up
-        run: |
-          # Clean up resources
-          # Add cleanup commands here
+      # - name: Clean up
+      #   run: |
+      #     # Clean up resources
+      #     # Add cleanup commands here
