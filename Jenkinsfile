@@ -1,32 +1,15 @@
-pipeline {
-    agent any
+node {
+    // Define the Kubernetes pod template
+    podTemplate(label: 'my-kubernetes-agent', containers: [
+        containerTemplate(name: 'jnlp', image: 'jenkins/inbound-agent:4.6-1-alpine', ttyEnabled: true)
+    ]) {
 
-    stages {
-        stage('Build') {
-            steps {
-                script {
-                    echo 'Building...'
-                    // Add build steps here
-                    // Example: sh 'make'
-                }
-            }
-        }
-        stage('Test') {
-            steps {
-                script {
-                    echo 'Testing...'
-                    // Add test steps here
-                    // Example: sh 'make test'
-                }
-            }
-        }
-    }
-
-    post {
-        always {
-            script {
-                echo 'Pipeline finished'
-                // Add any cleanup steps here
+        // Stage to echo "Hello"
+        stage('Hello') {
+            // Execute the stage in the container
+            container('jnlp') {
+                // Echo "Hello"
+                sh 'echo "Hello"'
             }
         }
     }
