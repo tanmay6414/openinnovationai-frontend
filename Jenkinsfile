@@ -93,6 +93,30 @@ pipeline {
         }
       }
     }
+    stage('Integration Test') {
+      steps {
+          sh 'echo "some integration test"'
+      }
+    }
+    stage('Sonar Test') {
+      steps {
+          sh 'echo "some sonar test"'
+      }
+    }
+    stage('Final artifact publishing if everything works') {
+      steps {
+        sh 'echo "docker pull demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu"'
+        sh 'echo "docker tag demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu demo.goharbor.io/openinnovationai/frontend:master-hfnvjfu"'
+        sh 'echo "docker push demo.goharbor.io/openinnovationai/frontend:master-hfnvjfu"'
+        sh 'echo "Here we update the helm values file with above updated sha, packege it and publish it to harbor repo"'
+            
+      }
+    }
+    stage('Cleanup') {
+      steps {
+        sh '"Cleanup all the resources"'
+      }
+    }
     
   }
 }
