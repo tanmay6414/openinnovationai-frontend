@@ -75,9 +75,9 @@ jobs:
           echo "Chart version: $CHART_VERSION"
           echo "::set-output name=chart_version::$CHART_VERSION"
 
-      - name: published the helm chart
-        run: |
-          helm push frontend-${{ steps.read_yaml.outputs.chart_version }}.tgz oci://demo.goharbor.io/openinnovationai
+      # - name: published the helm chart
+      #   run: |
+      #     helm push frontend-${{ steps.read_yaml.outputs.chart_version }}.tgz oci://demo.goharbor.io/openinnovationai
           
       - name: Checkout target repository
         uses: actions/checkout@v2
