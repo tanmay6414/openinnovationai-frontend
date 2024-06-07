@@ -89,7 +89,7 @@ jobs:
         run: |
           cd openinnovationai/argo/CD
           # Update the values file using sed or other tools
-          sed -i 's/^targetRevision: .*/targetRevision: ${{ steps.read_yaml.outputs.chart_version }}/' front-end.yaml
+          sed -i "s/^targetRevision:.*/targetRevision: \${{ steps.read_yaml.outputs.chart_version }}/" front-end.yaml
 
           cat front-end.yaml
 
