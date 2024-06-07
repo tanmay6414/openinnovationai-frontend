@@ -82,8 +82,10 @@ jobs:
     
 
       - name: manifest file
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
-          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com:tanmay6414/openinnovationai.git
+          git clone https://${GITHUB_TOKEN}@github.com/tanmay6414/openinnovationai.git
           cd openinnovationai/argo/CD
           # Update the values file using sed or other tools
           awk '{sub(/^    targetRevision: .*/, "    targetRevision: ${{ steps.read_yaml.outputs.chart_version }}")} 1' front-end.yaml > tmpfile && mv tmpfile front-end.yaml
