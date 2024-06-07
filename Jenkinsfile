@@ -8,6 +8,8 @@ pipeline {
                     echo 'Building...'
                     // Add build steps here
                     // Example: sh 'make'
+                    sh 'curl https://raw.githubusercontent.com/helm/helm/main/scripts/get-helm-3 | bash'
+                    sh 'helm version'
                 }
             }
         }
