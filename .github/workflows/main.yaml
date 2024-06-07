@@ -18,8 +18,14 @@ jobs:
 
       - name: Add Helm repo
         run: |
-          # Initialize Helm chart here
-          helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+          echo 'helm repo login openonnovationai demo.harbor.com' 
+      
+      - name: ADocker login
+        env:
+          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+        run: |
+          echo $DOCKER_PASSWORD | docker login demo.goharbor.io/openinnovationai  -u $DOCKER_USERNAME --password-stdin
 
       # - name: Run unit tests, Docker build, and compliance check in parallel
       #   run: |
