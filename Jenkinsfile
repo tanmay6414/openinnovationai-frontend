@@ -31,7 +31,7 @@ pipeline {
     stage('Docker Login') {
       steps {
         container('docker-test') {
-          withCredentials([usernamePassword(credentialsId: 'docker login', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
+          withCredentials([usernamePassword(credentialsId: 'docker-login', usernameVariable: 'DOCKER_USERNAME', passwordVariable: 'DOCKER_PASSWORD')]) {
             sh 'docker login demo.goharbor.io/openinnovationai  --username $DOCKER_USERNAME --password $DOCKER_PASSWORD'
           }
         }
