@@ -91,17 +91,22 @@ jobs:
           # Update the values file using sed or other tools
           awk '{sub(/^    targetRevision: .*/, "    targetRevision: ${{ steps.read_yaml.outputs.chart_version }}")} 1' front-end.yaml > tmpfile && mv tmpfile front-end.yaml
           cat front-end.yaml
-
-
-      - name: Commit and push changes
-        run: |
-          ls
-          cd openinnovationai
           git config --global user.name 'tanmay6414'
           git config --global user.email 'tpvarade@mitaoe.ac.in'
           sh 'git add .'
           git commit -m 'feat(frontend): update version for backend'
           git push
+
+
+      # - name: Commit and push changes
+      #   run: |
+      #     ls
+      #     cd openinnovationai
+      #     git config --global user.name 'tanmay6414'
+      #     git config --global user.email 'tpvarade@mitaoe.ac.in'
+      #     sh 'git add .'
+      #     git commit -m 'feat(frontend): update version for backend'
+      #     git push
 
       - name: Clean up
         run: |
