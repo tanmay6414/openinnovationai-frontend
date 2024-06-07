@@ -37,5 +37,10 @@ pipeline {
         }
       }
     }
+    stage('Application Build') {
+      steps {
+          sh 'echo "yarn build app"'
+      }
+    }
   }
 }
