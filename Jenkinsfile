@@ -72,7 +72,7 @@ pipeline {
                 // sh 'docker push demo.goharbor.io/openinnovationai/frontend:release-$SHORT_COMMIT'
             // }
             
-          } 
+          //} 
         }
       }
     }
