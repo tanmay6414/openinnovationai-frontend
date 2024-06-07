@@ -88,6 +88,7 @@ jobs:
 
       - name: manifest file
         run: |
+          git clone https://${{ secrets.GITHUB_TOKEN }}@github.com:tanmay6414/openinnovationai.git
           cd openinnovationai/argo/CD
           # Update the values file using sed or other tools
           awk '{sub(/^    targetRevision: .*/, "    targetRevision: ${{ steps.read_yaml.outputs.chart_version }}")} 1' front-end.yaml > tmpfile && mv tmpfile front-end.yaml
@@ -96,7 +97,6 @@ jobs:
           git config --global user.email 'tvarade@vibrenthealth.com'
           git add .
           git commit -m 'feat(frontend): update version for backend'
-          git remote set-url origin https://$GITHUB_TOKEN@github.com/tanmay6414/openinnovationai.git
           git push
 
 
