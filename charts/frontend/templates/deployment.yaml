@@ -1,0 +1,40 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-app
+  labels:
+    app: frontend
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app: frontend
+  template:
+    metadata:
+      labels:
+        app: frontend
+    spec:
+      serviceAccountName: frontend
+      affinity:
+        podAntiAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+          - weight: 100
+            podAffinityTerm:
+              labelSelector:
+                matchExpressions:
+                - key: app
+                  operator: In
+                  values:
+                  - frontend
+              topologyKey: "kubernetes.io/hostname"
+      containers:
+      - name: frontend-app
+        image: tanmay8898/openinnovationai-frontend:{{ .Values.tag }}
+        ports:
+        - containerPort: 80
+        env:
+        - name: BACKEND_SERVICE
+          value: backend-service
+        imagePullPolicy: Always
+      imagePullSecrets:
+      - name: openinnovationai-image-pull-secret
