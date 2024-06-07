@@ -42,5 +42,19 @@ pipeline {
           sh 'echo "yarn build app"'
       }
     }
+    stage('Testing Application') {
+      parallel {
+        stage('Conpliance Check') {
+          steps {
+              sh 'echo "helm conftest charts/frontend -p policies"'
+           }
+        }
+        stage('Unit Test') {
+          steps {
+              sh 'echo "yarn test"'
+           }
+        }
+      }
+    }
   }
 }
