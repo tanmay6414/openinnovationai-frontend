@@ -45,7 +45,7 @@ jobs:
       - name: Create and push Dockerfile
         run: |
           ls
-          docker build -t demo.goharbor.io/openinnovationai/frontend:master openinnovationai-frontend/Dockerfile
+          docker build -t demo.goharbor.io/openinnovationai/frontend:master .
           docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
           docker push demo.goharbor.io/openinnovationai/frontend:master
           docker push demo.goharbor.io/openinnovationai/frontend:master--$GITHUB_SHA
