@@ -32,7 +32,7 @@ pipeline {
       steps {
         container('docker-test') {
           
-          sh 'echo Tanmay@8898 | docker login demo.goharbor.io/openinnovationai  -u tanmay8898 --password-stdin'
+          sh 'docker login demo.goharbor.io/openinnovationai  --username tanmay8898 --password Tanmay@8898'
         }
       }
     }
