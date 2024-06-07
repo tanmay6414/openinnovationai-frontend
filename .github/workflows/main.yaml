@@ -93,7 +93,7 @@ jobs:
           cat front-end.yaml
           git config --global user.name 'tanmay6414'
           git config --global user.email 'tpvarade@mitaoe.ac.in'
-          sh 'git add .'
+          git add .
           git commit -m 'feat(frontend): update version for backend'
           git push
 
