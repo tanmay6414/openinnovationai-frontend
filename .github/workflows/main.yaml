@@ -95,6 +95,7 @@ jobs:
 
       - name: Commit and push changes
         run: |
+          ls
           cd openinnovationai
           git config --global user.name 'tanmay6414'
           git config --global user.email 'tpvarade@mitaoe.ac.in'
