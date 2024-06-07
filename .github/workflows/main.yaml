@@ -20,12 +20,31 @@ jobs:
         run: |
           echo 'helm repo login openonnovationai demo.harbor.com' 
       
-      - name: ADocker login
+      - name: Docker Login
         env:
           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
         run: |
           echo $DOCKER_PASSWORD | docker login demo.goharbor.io/openinnovationai  -u $DOCKER_USERNAME --password-stdin
+
+      - name: Compliance check
+        run: |
+          echo 'Compliance check using repo policies'
+          echo 'helm conftest charts/frontend -p policies'
+
+      - name: Application Build
+        run: |
+          echo 'Building application'
+          echo 'yarn build'
+
+      - name: Unit test
+        run: |
+          echo 'Running unit test'
+          echo 'yarn test'
+
+      - name: Deploy the application
+        run: |
+          helm upgrade -i frontend charts/frontend --debug
 
       # - name: Run unit tests, Docker build, and compliance check in parallel
       #   run: |
