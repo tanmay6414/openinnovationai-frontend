@@ -6,32 +6,33 @@ pipeline {
         kind: Pod
         spec:
           containers:
-          - name: maven
-            image: maven:alpine
-            command:
-            - cat
-            tty: true
           - name: helm
             image: alpine/helm
             command:
             - cat
             tty: true
+          - name: docker-test
+            image: rancher/dind-alpine
+            command:
+            - cat
+            tty: true
         '''
+      
     }
   }
   stages {
-    stage('Run maven') {
+     stage('Initialize Helm Repo') {
       steps {
-        container('maven') {
-          sh 'mvn -version'
-                
+        container('helm') {
+          sh 'helm repo login openonnovationai demo.harbor.com'
         }
       }
     }
-     stage('Run helm') {
+    stage('Docker Login') {
       steps {
-        container('helm') {
-          sh 'helm version'
+        container('docker-test') {
+          
+          sh 'docker login demo.goharbor.io/openinnovationai  -u tanmay8898 --password Tanmay@8898'
         }
       }
     }
