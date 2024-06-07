@@ -12,7 +12,7 @@ pipeline {
             - cat
             tty: true
           - name: docker-test
-            image: rancher/dind-alpine
+            image: docker:19.03.12
             command:
             - cat
             tty: true
