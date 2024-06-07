@@ -81,15 +81,11 @@ pipeline {
       parallel {
         stage('Docker tag and push ci artifact') {
           steps {
-            container('docker-dind') {
-              env.SHORT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim() 
-              echo "Short Commit SHA: ${env.SHORT_COMMIT}" }	
-              sh 'docker build demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
-              sh 'docker push demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
+              // SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
               sh 'echo "docker build demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu ."'
               sh 'echo "docker push demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu"'
               sh 'echo "In this step we are building and pushing artifact with out ci tag"'
-            }
+            
           }
         }
         stage('Package and publish helm CI') {
