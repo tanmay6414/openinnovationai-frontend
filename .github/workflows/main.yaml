@@ -60,9 +60,18 @@ jobs:
 
       - name: Package the helm chart
         run: |
-          ls
           helm dependency build charts/frontend
           helm package charts/frontend
+
+      - name: Read Chart.yaml
+        id: read_yaml
+        uses: actions/read-yaml@v1
+        with:
+          path: charts/frontend/Chart.yaml
+
+      - name: published the helm chart
+        run: |
+          helm push frontend-${{ steps.read_yaml.outputs.version }}.tgz oci://demo.goharbor.io/openinnovationai
           
       # - name: Run unit tests, Docker build, and compliance check in parallel
       #   run: |
