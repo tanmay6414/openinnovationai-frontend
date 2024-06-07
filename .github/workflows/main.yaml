@@ -1,108 +1,108 @@
-name: CI
+# name: CI
 
-on:
-   push:
-    branches:
-      - '*'
-   pull_request:
-    branches:
-      - '*'
+# on:
+#    push:
+#     branches:
+#       - '*'
+#    pull_request:
+#     branches:
+#       - '*'
 
-jobs:
-  deploy:
-    runs-on: ubuntu-latest
+# jobs:
+#   deploy:
+#     runs-on: ubuntu-latest
 
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+#     steps:
+#       - name: Checkout code
+#         uses: actions/checkout@v2
 
-      - name: Add Helm repo
-        run: |
-          echo 'helm repo login openonnovationai demo.harbor.com' 
+#       - name: Add Helm repo
+#         run: |
+#           echo 'helm repo login openonnovationai demo.harbor.com' 
       
-      - name: Docker Login
-        env:
-          DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
-          DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
-        run: |
-          echo $DOCKER_PASSWORD | docker login demo.goharbor.io/openinnovationai  -u $DOCKER_USERNAME --password-stdin
+#       - name: Docker Login
+#         env:
+#           DOCKER_USERNAME: ${{ secrets.DOCKER_USERNAME }}
+#           DOCKER_PASSWORD: ${{ secrets.DOCKER_PASSWORD }}
+#         run: |
+#           echo $DOCKER_PASSWORD | docker login demo.goharbor.io/openinnovationai  -u $DOCKER_USERNAME --password-stdin
 
-      - name: Compliance check
-        run: |
-          echo 'Compliance check using repo policies'
-          echo 'helm conftest charts/frontend -p policies'
+#       - name: Compliance check
+#         run: |
+#           echo 'Compliance check using repo policies'
+#           echo 'helm conftest charts/frontend -p policies'
 
-      - name: Application Build
-        run: |
-          echo 'Building application'
-          echo 'yarn build'
+#       - name: Application Build
+#         run: |
+#           echo 'Building application'
+#           echo 'yarn build'
 
-      - name: Unit test
-        run: |
-          echo 'Running unit test'
-          echo 'yarn test'
+#       - name: Unit test
+#         run: |
+#           echo 'Running unit test'
+#           echo 'yarn test'
 
-      - name: Create and push Dockerfile
-        run: |
-          ls
-          docker build -t demo.goharbor.io/openinnovationai/frontend:master .
-          echo '\ndocker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
-          docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
-          echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master'
-          docker push demo.goharbor.io/openinnovationai/frontend:master
-          echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
-          docker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
+#       - name: Create and push Dockerfile
+#         run: |
+#           ls
+#           docker build -t demo.goharbor.io/openinnovationai/frontend:master .
+#           echo '\ndocker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
+#           docker tag demo.goharbor.io/openinnovationai/frontend:master demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
+#           echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master'
+#           docker push demo.goharbor.io/openinnovationai/frontend:master
+#           echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
+#           docker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
 
-      - name: Deploy the application
-        run: |
-          echo 'helm upgrade -i frontend charts/frontend --debug'
-          echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
+#       - name: Deploy the application
+#         run: |
+#           echo 'helm upgrade -i frontend charts/frontend --debug'
+#           echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
 
-      - name: Package the helm chart
-        run: |
-          helm dependency build charts/frontend
-          helm package charts/frontend
+#       - name: Package the helm chart
+#         run: |
+#           helm dependency build charts/frontend
+#           helm package charts/frontend
 
-      - name: Install yq
-        run: |
-          sudo wget https://github.com/mikefarah/yq/releases/download/v4.9.8/yq_linux_amd64 -O /usr/bin/yq
-          sudo chmod +x /usr/bin/yq
+#       - name: Install yq
+#         run: |
+#           sudo wget https://github.com/mikefarah/yq/releases/download/v4.9.8/yq_linux_amd64 -O /usr/bin/yq
+#           sudo chmod +x /usr/bin/yq
 
-      - name: Read Chart.yaml
-        id: read_yaml
-        run: |
-          CHART_VERSION=$(yq eval '.version' charts/frontend/Chart.yaml)
-          echo "Chart version: $CHART_VERSION"
-          echo "::set-output name=chart_version::$CHART_VERSION"
+#       - name: Read Chart.yaml
+#         id: read_yaml
+#         run: |
+#           CHART_VERSION=$(yq eval '.version' charts/frontend/Chart.yaml)
+#           echo "Chart version: $CHART_VERSION"
+#           echo "::set-output name=chart_version::$CHART_VERSION"
 
-      - name: published the helm chart
-        run: |
-          helm push frontend-${{ steps.read_yaml.outputs.chart_version }}.tgz oci://demo.goharbor.io/openinnovationai
+#       - name: published the helm chart
+#         run: |
+#           helm push frontend-${{ steps.read_yaml.outputs.chart_version }}.tgz oci://demo.goharbor.io/openinnovationai
           
     
 
-      - name: manifest file
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          git clone https://${GITHUB_TOKEN}@github.com/tanmay6414/openinnovationai.git
-          cd openinnovationai/argo/CD
-          # Update the values file using sed or other tools
-          awk '{sub(/^    targetRevision: .*/, "    targetRevision: ${{ steps.read_yaml.outputs.chart_version }}")} 1' front-end.yaml > tmpfile && mv tmpfile front-end.yaml
-          cat front-end.yaml
+#       - name: manifest file
+#         env:
+#           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+#         run: |
+#           git clone https://${GITHUB_TOKEN}@github.com/tanmay6414/openinnovationai.git
+#           cd openinnovationai/argo/CD
+#           # Update the values file using sed or other tools
+#           awk '{sub(/^    targetRevision: .*/, "    targetRevision: ${{ steps.read_yaml.outputs.chart_version }}")} 1' front-end.yaml > tmpfile && mv tmpfile front-end.yaml
+#           cat front-end.yaml
 
 
 
-      # - name: Commit and push changes
-      #   run: |
-      #     ls
-      #     cd openinnovationai
-      #     git config --global user.name 'tanmay6414'
-      #     git config --global user.email 'tpvarade@mitaoe.ac.in'
-      #     sh 'git add .'
-      #     git commit -m 'feat(frontend): update version for backend'
-      #     git push
+#       # - name: Commit and push changes
+#       #   run: |
+#       #     ls
+#       #     cd openinnovationai
+#       #     git config --global user.name 'tanmay6414'
+#       #     git config --global user.email 'tpvarade@mitaoe.ac.in'
+#       #     sh 'git add .'
+#       #     git commit -m 'feat(frontend): update version for backend'
+#       #     git push
 
-      - name: Clean up
-        run: |
-          # Delete any created k8s env and other external resources
+#       - name: Clean up
+#         run: |
+#           # Delete any created k8s env and other external resources
