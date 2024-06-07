@@ -21,11 +21,16 @@ pipeline {
             command:
             - cat
             tty: true
+            securityContext:
+              privileged: true
             env:
             - name: DOCKER_TLS_CERTDIR
               value: ''
             - name: DOCKER_HOST
               value: tcp://localhost:2375
+          volumes:
+          - name: docker-graph-storage
+            emptyDir: {}
        
         '''
       
@@ -115,6 +120,13 @@ pipeline {
     stage('Cleanup') {
       steps {
         sh 'echo "Cleanup all the resources"'
+      }
+    }
+    stage('Itest') {
+      steps {
+        container('docker-dind') {
+          sh 'docker build test/test .'
+        }
       }
     }
     
