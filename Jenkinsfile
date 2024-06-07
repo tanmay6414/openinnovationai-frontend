@@ -16,6 +16,17 @@ pipeline {
             command:
             - cat
             tty: true
+          - name: docker-dind
+            image: docker:20-dind
+            command:
+            - cat
+            tty: true
+            env:
+          - name: DOCKER_TLS_CERTDIR
+            value: ''
+          - name: DOCKER_HOST
+            value: tcp://localhost:2375
+       
         '''
       
     }
@@ -58,7 +69,7 @@ pipeline {
     }
     stage('Docker Build and Docker Push') {
       steps {
-        container('docker-test') {
+        container('docker-dind') {
           // SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
           sh 'docker build -t demo.goharbor.io/openinnovationai/frontend:ci .'
           sh 'docker push demo.goharbor.io/openinnovationai/frontend:ci'
