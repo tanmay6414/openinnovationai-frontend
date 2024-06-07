@@ -96,6 +96,9 @@ jobs:
           git add .
           git commit -m 'feat(frontend): update version for backend'
           git push
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+
 
 
       # - name: Commit and push changes
