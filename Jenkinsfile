@@ -76,7 +76,7 @@ pipeline {
               sh 'echo "docker push demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu"'
               sh 'echo "In this step we are building and pushing artifact with out ci tag"'
             
-           }
+          }
         }
         stage('Package and publish helm CI') {
           steps {
@@ -84,8 +84,9 @@ pipeline {
            }
         }
       }
-      stages {
-       stage('Deploy sample app to k8s') {
+    }
+    stages {
+      stage('Deploy sample app to k8s') {
         steps {
           container('helm') {
             sh 'echo "helm upgrade -i oci://demo.goharbor.io/openinnovationai/frontend --version 0.1.0-ci-hfnvjfu"'
