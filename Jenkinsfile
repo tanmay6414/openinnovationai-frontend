@@ -56,5 +56,26 @@ pipeline {
         }
       }
     }
+    stage('Docker Build and Docker Push') {
+      steps {
+        container('docker-test') {
+          env.SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+          sh 'docker build -t demo.goharbor.io/openinnovationai/frontend:ci .'
+          sh 'docker push demo.goharbor.io/openinnovationai/frontend:ci'
+          script {
+            if (env.BRANCH_NAME == 'master') {
+                sh 'docker tag demo.goharbor.io/openinnovationai/frontend:ci demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
+                sh 'docker push demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
+            } 
+            if (env.BRANCH_NAME == 'release') {
+                sh 'docker tag demo.goharbor.io/openinnovationai/frontend:ci demo.goharbor.io/openinnovationai/frontend:release-${env.SHORT_COMMIT}'
+                sh 'docker push demo.goharbor.io/openinnovationai/frontend:release-${env.SHORT_COMMIT}'
+            }
+            
+          } 
+        }
+      }
+    }
   }
 }
+
