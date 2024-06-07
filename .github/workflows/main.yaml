@@ -53,15 +53,15 @@ jobs:
       #     echo '\ndocker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA'
       #     docker push demo.goharbor.io/openinnovationai/frontend:master-$GITHUB_SHA
 
-      - name: Deploy the application
-        run: |
-          echo 'helm upgrade -i frontend charts/frontend --debug'
-          echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
+      # - name: Deploy the application
+      #   run: |
+      #     echo 'helm upgrade -i frontend charts/frontend --debug'
+      #     echo 'We can pass the configuration with whitelisting all the github action ips on out kubenrtes cluster so this action can execute properly'
 
-      - name: Package the helm chart
-        run: |
-          helm dependency build charts/frontend
-          helm package charts/frontend
+      # - name: Package the helm chart
+      #   run: |
+      #     helm dependency build charts/frontend
+      #     helm package charts/frontend
 
       - name: Install yq
         run: |
@@ -79,30 +79,26 @@ jobs:
         run: |
           helm push frontend-${{ steps.read_yaml.outputs.chart_version }}.tgz oci://demo.goharbor.io/openinnovationai
           
-      # - name: Run unit tests, Docker build, and compliance check in parallel
-      #   run: |
-      #     # Run unit tests
-      #     echo "Running unit tests..."
+      - name: Checkout target repository
+        uses: actions/checkout@v2
+        with:
+          repository: tanmay6414/openinnovationai
 
-      #     # Build Docker image
-      #     echo "Building Docker image..."
-      #     # docker build -t my-docker-image .
+      - name: manifest file
+        run: |
+          cd openinnovationai/argo/CD
+          # Update the values file using sed or other tools
+          sed -i 's/^targetRevision: .*/targetRevision: ${{ steps.read_yaml.outputs.chart_version }}/' front-end.yaml
 
-      #     # Run compliance check
-      #     echo "Running compliance check..."
-      #     # Run compliance check commands here
+      - name: Commit and push changes
+        run: |
+          git config --global user.email "tpvarade@mitaoe.ac.in"
+          git config --global user.name "tanmay6414"
+          git add .
+          git commit -m "Update target revision"
+          git push
 
-      # - name: Deploy application
-      #   run: |
-      #     # Deploy application using Helm
-      #     # helm upgrade --install my-app ./helm-chart
-
-      # - name: Publish results
-      #   run: |
-      #     # Publish results
-      #     # Add commands to publish results here
-
-      # - name: Clean up
-      #   run: |
-      #     # Clean up resources
-      #     # Add cleanup commands here
+      - name: Clean up
+        run: |
+          # Clean up resources
+          # Add cleanup commands here
