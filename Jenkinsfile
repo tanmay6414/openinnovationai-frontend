@@ -11,6 +11,11 @@ pipeline {
             command:
             - cat
             tty: true
+          - name: updateenv
+            image: demo.goharbor.io/openinnovationai/updatemanifest:master
+            command:
+            - cat
+            tty: true
           - name: docker-test
             image: docker:19.03.12
             command:
@@ -76,11 +81,15 @@ pipeline {
       parallel {
         stage('Docker tag and push ci artifact') {
           steps {
-              // SHORT_COMMIT=sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim()
+            container('docker-dind') {
+              env.SHORT_COMMIT = sh(returnStdout: true, script: 'git rev-parse --short HEAD').trim() 
+              echo "Short Commit SHA: ${env.SHORT_COMMIT}" }	
+              sh 'docker build demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
+              sh 'docker push demo.goharbor.io/openinnovationai/frontend:master-${env.SHORT_COMMIT}'
               sh 'echo "docker build demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu ."'
               sh 'echo "docker push demo.goharbor.io/openinnovationai/frontend:ci-hfnvjfu"'
               sh 'echo "In this step we are building and pushing artifact with out ci tag"'
-            
+            }
           }
         }
         stage('Package and publish helm CI') {
