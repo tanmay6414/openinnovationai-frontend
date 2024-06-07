@@ -22,10 +22,10 @@ pipeline {
             - cat
             tty: true
             env:
-          - name: DOCKER_TLS_CERTDIR
-            value: ''
-          - name: DOCKER_HOST
-            value: tcp://localhost:2375
+            - name: DOCKER_TLS_CERTDIR
+              value: ''
+            - name: DOCKER_HOST
+              value: tcp://localhost:2375
        
         '''
       
