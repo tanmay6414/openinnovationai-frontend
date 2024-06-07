@@ -85,15 +85,15 @@ pipeline {
         }
       }
     }
-    stages {
-      stage('Deploy sample app to k8s') {
-        steps {
-          container('helm') {
-            sh 'echo "helm upgrade -i oci://demo.goharbor.io/openinnovationai/frontend --version 0.1.0-ci-hfnvjfu"'
-          }
+
+    stage('Deploy sample app to k8s') {
+      steps {
+        container('helm') {
+          sh 'echo "helm upgrade -i oci://demo.goharbor.io/openinnovationai/frontend --version 0.1.0-ci-hfnvjfu"'
         }
       }
     }
+    
   }
 }
 
