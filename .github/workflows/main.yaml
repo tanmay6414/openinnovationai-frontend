@@ -83,6 +83,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           repository: tanmay6414/openinnovationai
+          path: openinnovationai
 
       - name: manifest file
         run: |
