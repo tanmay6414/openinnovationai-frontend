@@ -92,6 +92,7 @@ jobs:
           cat front-end.yaml
           git config --global user.name 'tanmay6414'
           git config --global user.email 'tpvarade@mitaoe.ac.in'
+          git remote set-url origin https://${GITHUB_TOKEN}@github.com/tanmay6414/openinnovationai.git
           git add .
           git commit -m 'feat(frontend): update version for backend'
           git push
