@@ -7,7 +7,7 @@ metadata:
 spec:
   ingressClassName: nginx
   rules:
-  - host: frontend-test.devk8s.vibrenthealth.com
+  - host: frontend.openinnovationai.com
     http:
       paths:
       - path: /
