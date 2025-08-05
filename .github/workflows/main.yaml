@@ -30,4 +30,4 @@ jobs:
 
       - name: Create patch release tag
         run: |
-          npx release-it patch --ci --no-increment
+          npx release-it  --ci 
