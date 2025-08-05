@@ -30,7 +30,4 @@ jobs:
 
       - name: Create patch release tag
         run: |
-          npx release-it patch --ci --no-increment \
-            --git.tagName="v%v" \
-            --git.push \
-            --git.requireCleanWorkingDir
+          npx release-it patch --ci --no-increment
