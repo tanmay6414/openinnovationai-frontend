@@ -30,4 +30,10 @@ jobs:
 
       - name: Create patch release tag
         run: |
-          npx release-it  patch 
+          latest_tag=$(git describe --tags --abbrev=0)
+          version=${latest_tag#v}
+          IFS='.' read -r major minor patch <<< "$version"
+          patch=$((patch + 1))
+          new_version="$major.$minor.$patch"
+          echo "$new_version"
+
